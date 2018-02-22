@@ -1,11 +1,12 @@
 var db = require("./db");
 
 var Product = db.model('Product', {
-  id: {type: String, required: true},
-    lat: {type: String, required: true},
-    lng: {type: String, required: true},
-    message: {type: String, required: true},
-    dueDate: {type: String, required: true}
+    id: {type: String},
+    lat: {type: String},
+    lng: {type: String},
+    message: {type: String},
+    dueDate: {type: String},
+    postalAddress: {type: String}
 });
 
 module.exports = Product;
