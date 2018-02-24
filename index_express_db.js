@@ -19,23 +19,8 @@ app.use(bodyParser.json({type: 'application/json'}));
 //app.use(express.static(__dirname + "/./node_modules/public"))
 app.use(express.static(__dirname + "/public"))
 var Product = require("./public/model/product");
+//app.use(express.static(__dirname + ".public/modal/my_script");
 
-// var catalog = new Object(); // A Map of javascript Objects.
-// catalog[0] = {
-//   id:0,
-//   name: "USB drive",
-//    price: 10
-//  };
-// catalog[1] = {
-//   id:1,
-//   name: "Mouse",
-//   price: 20
-// };
-// catalog['tmp']={
-//   id : 'tmp',
-//   name: "No name",
-//   price: 0
-// };
 
 app.get("/catalog", function(req, res) {
     var stream = Product.find().stream();
@@ -50,18 +35,13 @@ app.get("/catalog", function(req, res) {
             res.json(results);
     });
 });
-//next is for addresssing error
-// app.get('/catalog/:id',function (req, res, next){
-//   var id = req.params.id;
-//   //console.log(req);
-//   console.log(id);
-//   if (id in catalog){
-//     res.json(catalog[id]);
-//   } else {
-//     res.status(404);
-//     res.send("That product is not in our catalog");
-//   }
-// });
+
+app.get("/catalog/:home", function(req, res) {
+    Product.count({}, function (err, count){
+      res.send("The count is " + count);
+    });
+  });
+
 
 app.get("/catalog/:id", function(req, res, next) {
     var idProduct = req.params.id;
@@ -81,36 +61,32 @@ app.get("/catalog/:id", function(req, res, next) {
   });
 
 
-app.get('/hello', function (req, res){
-  res.send("Hello");
-});
-
-app.get('/bye', function (req, res){
-  res.send("Bye");
-});
 
 //Post method to add new items in the catalog if not previously existed
 app.post("/catalog", function(req, res, next) {
   const idProduct = req.body.id;
   const product = req.body;
+  //console.log(idProduct);
   Product.findOne({id: idProduct}, function (err, product){
     if (err){
       res.status(500);
       next("Internal server error");
     } else if (product != null){
-      res.status(400);
+      //res.status(400);
       res.send("A product with id = "+idProduct +"already exists in the DB")
     }
   });
 
   Product.create(product, function (err, result){
+    //console.log("The product is " + result);
     if (err){
       res.status(500);
       next("Internal server error");
     }else {
       res.set("Location", "http://localhost:3000/" + idProduct);
-      res.status(201);
-      res.send(201);
+      //res.status(201);
+      //res.send(201);
+      res.send(result);
     }
     });
 });
@@ -125,8 +101,8 @@ app.put("/catalog/:id", function (req, res, next){
     res.status(400);
     next("The uri "+ uri_id + "and id "+id + "does not match.")
   }
-  if(id in catalog){//OK
-    catalog[id] = req.body;
+  if(id in Product){//OK
+    Product[id] = req.body.id;
     res.status(200);
     res.send();
   }else{//Bad request
