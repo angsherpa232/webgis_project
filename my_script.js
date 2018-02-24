@@ -19,59 +19,46 @@ app.controller("TheController", ["$scope","$http", function($scope,$http) {
   $scope.markers = new Array();
   $scope.counter = $scope.markers.length;
 
+
   //Markers array updater
   $(document).ready( function () {
     $scope.update_markers();
   });
 
-  $scope.update_markers = function (){
+//To check the count
+  $scope.check_count = function (){
     $.ajax({
-      url: urlString+"/catalog",
+      url: urlString+"/catalog/home",
       type: 'GET'
     }).done (function (resp){
-        // $.each(resp, function (index, value){
-        //   $scope.markers.push(resp);
-        // })
-
-        console.log(resp);
-        console.log("this");
-
-        console.log("The length of array is " + $scope.markers.length);
-        console.log($scope.markers);
     })
   };
 
 
-  //double click on left button gives the new marker and also zooms the map
-  // $scope.$on("leafletDirectiveMap.click", function (event,args) {
-  //     var latlng = args.leafletEvent.latlng;
-  //     $scope.markers.push({
-  //         lat: latlng.lat,
-  //         lng: latlng.lng,
-  //         message: "Hello"
-  //     });
-  // });
+//To update the array
+  $scope.update_markers = function () {
+    $.ajax({
+      url: urlString+"/catalog",
+      type: 'GET'
+    }).done (function (resp){
+        $.each(resp, function (index, value){
+          console.log(value);
+           $scope.markers.push({
+             id: value.id,
+             lat: parseFloat(value.lat),
+            lng: parseFloat(value.lng),
+            dueDate: value.dueDate,
+            message: value.message,
+            postalAddress: value.postalAddress
+          })
+         });
+          $scope.counter = $scope.markers.length;
+    });
+}
 
-
-  //Right is for marker and left button is for zooming
-  // $scope.$on("leafletDirectiveMap.mousedown", function(event, args) {
-  //   var mouseButton = args.leafletEvent.originalEvent.button;
-  //
-  //   if (mouseButton == 2) { // Right button
-  //     var latlng = args.leafletEvent.latlng;
-  //
-  //     $scope.markers.push({
-  //       lat: latlng.lat,
-  //       lng: latlng.lng,
-  //       message: "Hello",
-  //       dueDate: new Date()
-  //     });
-  //   }
-  // });
 
 //Gets the lat long from the map
   $scope.$on("leafletDirectiveMap.mousedown", function (event,args) {
-    console.log("The number of counter is " + $scope.counter);
     var mouseButton = args.leafletEvent.originalEvent.button;
     if(mouseButton == 2) { // Right button
         latlng = args.leafletEvent.latlng;
@@ -119,7 +106,6 @@ function addMarker(response) {
 
   $scope.removeInfo = function(index) {
     $scope.currentMarker = $scope.markers.splice(index,1);
-
   }
 
 
@@ -156,5 +142,4 @@ function addMarker(response) {
           }
       })
     }
-
 }]);
