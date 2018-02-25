@@ -113,14 +113,22 @@ app.put("/catalog/:id", function (req, res, next){
 
 app.delete("/catalog/:id", function (req, res, next){
   const idProduct = req.params.id;
-  Product.remove({"id": idProduct},function (err, result){
-    res.send("Deleted successfully");
-    if (result.n == 0){
-      res.send("No product with this id");
-    }else{
-    console.log("successfully deleted");
-  }
-  });
+  Product.findOneAndRemove({id: idProduct}, function (err, product){
+
+    if (err)
+      res.status(500).json({ errmsg: err });
+      res.status(200).json({ errmsg: product });
+  })
+  // Product.remove({"id": idProduct},function (err, result){
+  //   res.send("Deleted successfully");
+  //   if (result.n == 0){
+  //     res.send("No product with this id");
+  //     return false
+  //   }else{
+  //     res.send("successfully deleted");
+  //     return false
+  // }
+  // });
 });
 
 var server = app.listen(port, function () {

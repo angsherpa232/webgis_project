@@ -56,7 +56,7 @@ app.controller("TheController", ["$scope","$http", function($scope,$http) {
     });
 }
 
-
+console.log($scope.markers.message);
 //Gets the lat long from the map
   $scope.$on("leafletDirectiveMap.mousedown", function (event,args) {
     var mouseButton = args.leafletEvent.originalEvent.button;
@@ -104,27 +104,30 @@ function addMarker(response) {
     $scope.castellon.lng=$scope.currentMarker.lng;
   }
 
-  $scope.removeInfo = function(index) {
-    $scope.currentMarker = $scope.markers.splice(index,1);
-  }
+  // $scope.removeInfo = function(index) {
+  //   $scope.currentMarker = $scope.markers.splice(index,1);
+  // }
 
 
   //To delete the items from the catalog
-//   $scope.removeInfo = function(id) {
-//     $.ajax({
-//   url: urlString+"/catalog/"+id,
-//   method: 'DELETE',
-//   contentType: 'application/json',
-//   success: function(result) {
-//       console.log("successfully deleted " + id);
-//       //$("#form-message").html("<p>Successfully deleted: </p>"+id);
-//         $scope.$apply();
-//   },
-//   error: function(request,msg,error) {
-//       alert(error);
-//   }
-// });
-//   }
+  $scope.removeInfo = function(event,index) {
+
+
+    $.ajax({
+          url: urlString+"/catalog/"+(event.target.id),
+          method: 'DELETE',
+          contentType: 'application/json',
+            success: function(result) {
+                console.log("successfully deleted " + (event.target.id));
+                  $scope.currentMarker = $scope.markers.splice(index,1);
+      //$("#form-message").html("<p>Successfully deleted: </p>"+id);
+        //$scope.$apply();
+  },
+  error: function(request,msg,error) {
+      alert(error);
+      }
+    });
+  }
 
 //Adding new marker info to the database
   $scope.post_marker = function(){
