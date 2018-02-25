@@ -36,16 +36,15 @@ app.get("/catalog", function(req, res) {
     });
 });
 
-app.get("/catalog/:home", function(req, res) {
-    Product.count({}, function (err, count){
-      res.send("The count is " + count);
-    });
-  });
+// app.get("/catalog/:home", function(req, res) {
+//     Product.count({}, function (err, count){
+//       res.send("The count is " + count);
+//     });
+//   });
 
 
 app.get("/catalog/:id", function(req, res, next) {
     var idProduct = req.params.id;
-
     Product.findOne({id: idProduct}, function(err, product) {
         if(err) {
             res.status(500);
@@ -90,26 +89,31 @@ app.post("/catalog", function(req, res, next) {
     }
     });
 });
-  // console.log(req.body.ID);
-  //   var id = req.body.ID;
 
 
+//Handling put request
 app.put("/catalog/:id", function (req, res, next){
   const uri_id = req.params.id;
-  const id = req.body.id;
-  if(uri_id != id){
-    res.status(400);
-    next("The uri "+ uri_id + "and id "+id + "does not match.")
-  }
-  if(id in Product){//OK
-    Product[id] = req.body.id;
-    res.status(200);
-    res.send();
-  }else{//Bad request
-    res.status(400);
-    next("Product with id " + id + " is not in the cataclog");
-  }
+  const product = req.body;
+  Product.findOne({id: uri_id}, function (err, product){
+    if (err){
+      res.status(500);
+      next("Internal server error");
+    } else if (product == null){
+      res.send(201);
+    }
+  });
+  Product.update(product, function (err, result){
+    if (err){
+      res.status(500);
+      next(err);
+    }else {
+    res.set("Location", "http://localhost:3000/catalog/");
+       res.send(201);
+    }
+    })
 })
+
 
 app.delete("/catalog/:id", function (req, res, next){
   const idProduct = req.params.id;

@@ -11,19 +11,20 @@
     <script src="../node_modules/angular-leaflet-directive/dist/angular-leaflet-directive.js"></script>
     <script src="../scripts/my_script.js"></script>
     <title>My first AngularJS and Leaflet map</title>
+
+    <link href='./styles.css' rel="stylesheet" type="text/css"/>
 </head>
-<body ng-controller="TheController as theController">
+<body ng-controller="TheController as theController" class="jumbotron">
     <div class="container">
         <h1>My first Angular and Leaftlet map</h1>
         <!--<leaflet tiles="tiles" height="480px" width="100%"></leaflet>-->
         <leaflet tiles="tiles" lf-center="castellon" markers="markers" height="480px" width="100%"></leaflet>
 
-
     <div class="container">
     <div class="row">
         <div class="col-md-12">
             <h2>TODO list</h2>
-            <table class="table">
+            <table class="table table-striped">
                 <thead>
                     <tr><th>Message</th><th>Due date</th><th></th>
                     </tr>
@@ -32,7 +33,8 @@
                   <tr ng-repeat="marker in markers">
           <td>{{marker.message}}</td>
           <td>{{marker.dueDate | date: "dd/MM/yyyy (hh:mm)"}}</td>
-          <td><button class="btn btn-info" ng-click="showInfo($index)" data-toggle="modal" data-target="#myModal">Info</button> </td>
+          <td><button class="btn btn-info" ng-click="showInfo($index)" data-toggle="modal" data-target="#infoModel">Info</button> </td>
+          <td><button class="btn btn-info" ng-click="editInfo($index)" data-toggle="modal" data-target="#editModel">Edit</button></td>
           <td><button class="btn btn-info" ng-click="focus($index)">Focus</button> </td>
           <td><button class="btn btn-info" ng-click="removeInfo($index)">Remove</button> </td>
       </tr>
@@ -43,26 +45,57 @@
     </div>
 
         <!-- Modal window -->
-        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal fade" id="infoModel" tabindex="-2" role="dialog" aria-labelledby="myModalLabel">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel">Info</h4>
+                <h4 class="modal-title" id="myModalLabel">Information about the incident</h4><br>
 
             </div>
-            <div class="modal-body">
-                <p>Change the item here:</p>
-                <p>Message: <input type="text" ng-model="currentMarker.message"></p>
-                <p><input type="datetime-local" ng-model="currentMarker.dueDate"></p>
-                <p>Adrres: {{currentMarker.postalAddress}}</p>
+            <div class="modal-body jumbotron">
+                <p>Reported incident id: {{currentMarker.id}}</p>
+                <p>Address: <br>{{currentMarker.postalAddress}}</p>
+                <p><input type="date" ng-model="currentMarker.dueDate" ng-readonly="true" style="width: 480px"></p>
+                <p>Message: <input type="text" ng-model="currentMarker.message" ng-readonly="true" style="width: 480px"></p>
+                <p>Status: <input type="text" ng-model="currentMarker.status" ng-readonly="true"/></p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+
             </div>
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="editModel" tabindex="-2" role="dialog" aria-labelledby="myModalLabel">
+<div class="modal-dialog" role="document">
+<div class="modal-content">
+    <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">Information about the incident</h4><br>
+
+    </div>
+    <div class="modal-body jumbotron">
+        <p>Reported incident id: {{currentMarker.id}}</p>
+        <p>Address: <br>{{currentMarker.postalAddress}}</p>
+        <p><input type="date" ng-model="currentMarker.dueDate" style="width: 480px"></p>
+        <p>Message: <input type="text" ng-model="currentMarker.message" style="width: 480px"></p>
+        <p>Status: <input type="text" ng-model="currentMarker.status" ng-readonly="true"/></p>
+    </div>
+    <div class="modal-footer">
+      <button type="submit" ng-click="edit($index)" class="btn btn-default">Submit</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        <div>
+          <!-- Rounded switch -->
+          <label class="switch">
+            <input type="checkbox" id="myToggle"/>
+            <span class="slider round"></span>
+          </label>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+
     <!--</div>-->
 </div>
 </body>
