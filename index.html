@@ -16,27 +16,28 @@
 </head>
 <body ng-controller="TheController as theController" class="jumbotron">
     <div class="container">
-        <h1>My first Angular and Leaftlet map</h1>
+        <h1 style="text-align:center">Incident reporting web app</h1>
         <!--<leaflet tiles="tiles" height="480px" width="100%"></leaflet>-->
         <leaflet tiles="tiles" lf-center="castellon" markers="markers" height="480px" width="100%"></leaflet>
 
     <div class="container">
     <div class="row">
         <div class="col-md-12">
-            <h2>TODO list</h2>
+            <h2>List of incidents</h2>
             <table class="table table-striped">
                 <thead>
-                    <tr><th>Message</th><th>Due date</th><th></th>
+                    <tr><th>Due date</th><th>Incident details</th><th>Status</th>
                     </tr>
                 </thead>
                 <tbody>
                   <tr ng-repeat="marker in markers">
-          <td>{{marker.message}}</td>
           <td>{{marker.dueDate | date: "dd/MM/yyyy (hh:mm)"}}</td>
-          <td><button class="btn btn-info" ng-click="showInfo($index)" data-toggle="modal" data-target="#infoModel">Info</button> </td>
+          <td>{{marker.message}}</td>
+          <td>{{marker.status}}</td>
+          <td><button class="btn btn-secondary" ng-click="showInfo($index)" data-toggle="modal" data-target="#infoModel">View</button> </td>
           <td><button class="btn btn-info" ng-click="editInfo($index)" data-toggle="modal" data-target="#editModel">Edit</button></td>
-          <td><button class="btn btn-info" ng-click="focus($index)">Focus</button> </td>
-          <td><button class="btn btn-info" ng-click="removeInfo($index)">Remove</button> </td>
+          <td><button class="btn btn-primary" ng-click="focus($index)">Zoom to</button> </td>
+          <td><button class="btn btn-danger" ng-click="removeInfo($index)">Delete</button> </td>
       </tr>
                 </tbody>
             </table>
@@ -80,10 +81,6 @@
         <p><input type="date" ng-model="currentMarker.dueDate" style="width: 480px"></p>
         <p>Message: <input type="text" ng-model="currentMarker.message" style="width: 480px"></p>
         <p>Status: <input type="text" ng-model="currentMarker.status" ng-readonly="true"/></p>
-    </div>
-    <div class="modal-footer">
-      <button type="submit" ng-click="edit($index)" class="btn btn-default">Submit</button>
-        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
         <div>
           <!-- Rounded switch -->
           <label class="switch">
@@ -91,6 +88,10 @@
             <span class="slider round"></span>
           </label>
         </div>
+    </div>
+    <div class="modal-footer">
+      <button type="submit" ng-click="edit($index)" class="btn btn-primary">Submit</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
     </div>
 </div>
 </div>
