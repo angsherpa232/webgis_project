@@ -155,37 +155,38 @@ function addMarker(response) {
     $scope.castellon.lng=$scope.currentMarker.lng;
   }
 
+
+
+
 //Edit and updater
 $scope.editInfo = function(index) {
   $scope.currentMarker = $scope.markers[index];
+  //Switch solve and Unsolved
+  $('#myToggle').change(function(index){
+      if(this.checked) {
+          $scope.currentMarker.status = 'Solved';
+      }
+      else {
+          console.log($scope.currentMarker.status);
+      }
+  });
    $scope.edit = function(index) {
-    //console.log($scope.currentMarker)
-    console.log(JSON.stringify($scope.currentMarker));
     var _data = angular.toJson($scope.currentMarker);
-//  $scope.currentMarker = $scope.markers[index];
+
     $.ajax({
     url: urlString+"/catalog/"+$scope.currentMarker.id,
     method: 'PUT',
     data : _data,
-    contentType: 'application/json',
-    success : function (res){
-      console.log(res);
-      $scope.$apply();
-  },
-  error: function (er){
-    console.log(er);
-  }
-})
+    contentType: 'application/json'
+  }).done(function (res){
+    alert(res);
+    $scope.$apply();
+  })
+  // error: function (er){
+  //   console.log(er);
+  // }
+// })
 }
-//Switch solve and Unsolved
-$('#myToggle').change(function(index){
-    if(this.checked) {
-        $scope.currentMarker.status = 'Solved';
-    }
-    else {
-        console.log($scope.currentMarker.status);
-    }
-});
 }
 
 
