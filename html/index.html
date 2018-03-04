@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="app">
+<head>
+    <meta charset="UTF-8">
+    <script src="../node_modules/jquery/dist/jquery.js"></script>
+    <link href="../node_modules/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
+    <link href="../node_modules/leaflet/dist/leaflet.css" rel="stylesheet">
+    <script src="../node_modules/bootstrap/dist/js/bootstrap.js"></script>
+    <script src="../node_modules/angular/angular.js"></script>
+    <script src="../node_modules/leaflet/dist/leaflet.js"></script>
+    <script src="../node_modules/angular-leaflet-directive/dist/angular-leaflet-directive.js"></script>
+    <script src="../scripts/my_script.js"></script>
+    <title>Incident reporting system</title>
+
+
+    <link href='./styles.css' rel="stylesheet" type="text/css"/>
+</head>
+<body ng-controller="TheController as theController">
+    <div class="container">
+        <h1 style="font-family:Courier New;text-align:center">Incident Reporting Web Application</h1>
+        <!--<leaflet tiles="tiles" height="480px" width="100%"></leaflet>-->
+        <leaflet tiles="tiles" lf-center="castellon" markers="markers" height="480px" width="100%"></leaflet>
+
+    <div class="container">
+      <div>
+      <h2>Number of incidents</h2>
+      <p style="color:blue">Total incidents: {{markers.length}} <span style="color:green;padding-left:85px">Total solved: {{solved}}</span>
+        <span style="color:red;padding-left:85px">Total unsolved: {{unsolved}}</span></p>
+      </div>
+    <div class="row">
+        <div class="col-md-12">
+            <h2>List of incidents</h2>
+            <table class="table table-striped">
+                <thead>
+                    <tr><th>Reported date</th><th>Incident details</th><th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                  <tr ng-repeat="marker in markers">
+          <td>{{marker.reportedDate | date: "dd/MM/yyyy (hh:mm)"}}</td>
+          <td>{{marker.message}}</td>
+          <td>{{marker.status}}</td>
+          <td><button class="btn btn-secondary" ng-click="showInfo($index)" data-toggle="modal" data-target="#infoModel">View</button> </td>
+          <td><button class="btn btn-info" ng-click="editInfo($index)" data-toggle="modal" data-target="#editModel">Edit</button></td>
+          <td><button class="btn btn-primary" ng-click="focus($index)">Zoom to</button> </td>
+          <td><button class="btn btn-danger" ng-click="removeInfo($index)">Delete</button> </td>
+      </tr>
+                </tbody>
+            </table>
+        </div>
+      </div>
+    </div>
+
+        <!-- Modal window -->
+        <div class="modal fade" id="infoModel" tabindex="-2" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">Information about the incident</h4><br>
+
+            </div>
+            <div class="modal-body jumbotron">
+                <p>Reported incident id: {{currentMarker.id}}</p>
+                <p>Address: <br>{{currentMarker.postalAddress}}</p>
+                <p><input type="date" ng-model="currentMarker.reportedDate" ng-readonly="true" style="width: 480px"></p>
+                <p>Message: <input type="text" ng-model="currentMarker.message" ng-readonly="true" style="width: 480px"></p>
+                <p>Status: <input type="text" ng-model="currentMarker.status" ng-readonly="true"/></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editModel" tabindex="-2" role="dialog" aria-labelledby="myModalLabel">
+<div class="modal-dialog" role="document">
+<div class="modal-content">
+    <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">Edit incident detail</h4><br>
+    </div>
+
+    <div class="modal-body jumbotron">
+        <p>Reported incident id: {{currentMarker.id}}</p>
+        <p>Address: <br>{{currentMarker.postalAddress}}</p>
+        <p><input type="date" ng-model="currentMarker.reportedDate" style="width: 480px"></p>
+        <p>Message: <input type="text" ng-model="currentMarker.message" style="width: 480px"></p>
+        <p>Status: <input type="text" ng-model="currentMarker.status" ng-readonly="true"/></p>
+        <div>
+          <!-- Rounded switch -->
+          <label class="switch">
+            <input type="checkbox" id="myToggle"/>
+            <span class="slider round"></span>
+          </label>
+        </div>
+    </div>
+    <div class="modal-footer">
+      <button type="submit" ng-click="edit($index)" class="btn btn-primary">Submit</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+    </div>
+</div>
+</div>
+</div>
+
+<div class="modal fade" id="addModel" tabindex="-2" role="dialog" aria-labelledby="myModalLabel">
+<div class="modal-dialog" role="document">
+<div class="modal-content">
+    <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">Add new Incident detail</h4><br>
+
+    </div>
+    <div class="modal-body jumbotron">
+        <p>Reported incident id: {{currentMarker.id}}</p>
+        <p>Address: <br>{{currentMarker.postalAddress}}</p>
+        <p><input type="date" ng-model="currentMarker.reportedDate" style="width: 480px"></p>
+        <p>Message: <input type="text" ng-model="currentMarker.message" style="width: 480px"></p>
+        <p>Status: <input type="text" ng-model="currentMarker.status" ng-readonly="true"/></p>
+    </div>
+    <div class="modal-footer">
+      <button type="submit" ng-click="post_marker()" class="btn btn-primary">Add</button>
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+    </div>
+</div>
+</div>
+</div>
+
+
+</div>
+</body>
+</html>
